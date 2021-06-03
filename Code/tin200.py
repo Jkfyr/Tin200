@@ -2,31 +2,35 @@ import streamlit as st
 import pandas as pd
 import matplotlib.pyplot as plt
 import pandas as pd
+import streamlit.components.v1 as components
+
+# title
+st.title("OGA BOGA LAND")
+st.sidebar.title('Enter your data here:')
 
 
+#region IMAGE
+#TODO: IMAGE WIll not load on web
 
+#img = 'C:\Users\jkfyr\OneDrive\Documents\NMBU\Tin200\Tin200\Code\monster.png'
+#img = imread('monster.png')
+#st.sidebar.image(img, use_column_width=True, width=5)
+#endregion
 
-st.write("""
-# OGA BOGA LAND
-""")
-st.write('test')
+st.write("[FIRE!!!]()")
 
+# TODO: fix URLS stremlit will not run short rout
+# ===============================
 st.write('---')
 st.write('jk is testing this web')
-
-
+components.html("<p style='color:red;'> :O COLOR")
 #df_train = pd.read_csv('../DATA/train_TIN200.csv')
 #C:\Users\jkfyr\OneDrive\Documents\NMBU\Tin200\Tin200\DATA
 olo = pd.read_csv('C:/Users/jkfyr/OneDrive/Documents/NMBU/Tin200/Tin200/DATA/prepared_train.csv')
 url = 'C:/Users/jkfyr/OneDrive/Documents/NMBU/Tin200/Tin200/DATA/train_TIN200.csv'
-#print(olo)
 st.write(olo)
 st.write('---')
-"""
-print(float(olo.CoapplicantIncome.min()))
-print(float(olo.CoapplicantIncome.max()))
-print(float(olo.CoapplicantIncome.mean()))
-"""
+
 
 def user_value():
     Loan_ID = st.sidebar.s
