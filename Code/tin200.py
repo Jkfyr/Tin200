@@ -29,11 +29,11 @@ print(float(olo.CoapplicantIncome.mean()))
 """
 
 def user_value():
-    #Loan_ID =
-    Gender_Imputed = st.sidebar.slider('Gender', 0, 1)
-    Married_Imputed = st.sidebar.slider('Married', 0, 1)
+    Loan_ID = st.sidebar.s
+    Gender_Imputed = st.sidebar.selectbox('Gender', ['Male','Fmale'])
+    Married_Imputed = st.sidebar.selectbox('Married', ['Yes', 'No'])
     Dependents_Imputed = st.sidebar.slider('Dependents', 0, 1, 3)
-    Education_Imputed = st.sidebar.slider('Education', 0, 1)
+    Education_Imputed = st.sidebar.selectbox('Education', ['Yes', 'NO'])
     #Self_Employed_Imputed = st.sidebar.slider('Self_Employed', 0, 1)
     ApplicantIncome = st.sidebar.slider('ApplicantIncome', float(olo.ApplicantIncome.min()), float(olo.ApplicantIncome.max()), float(olo.ApplicantIncome.mean()))
     CoapplicantIncome= st.sidebar.slider('CoapplicantIncome', float(olo.CoapplicantIncome.min()), float(olo.CoapplicantIncome.max()), float(olo.CoapplicantIncome.mean()))
