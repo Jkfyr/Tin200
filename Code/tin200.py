@@ -22,8 +22,10 @@ url = 'C:/Users/jkfyr/OneDrive/Documents/NMBU/Tin200/Tin200/DATA/train_TIN200.cs
 #print(olo)
 st.write(olo)
 st.write('---')
+print(float(olo.CoapplicantIncome.min()))
+print(float(olo.CoapplicantIncome.max()))
+print(float(olo.CoapplicantIncome.mean()))
 
-print(float(olo.ApplicantIncome.max()))
 
 def user_value():
     # Loan_ID =
@@ -32,28 +34,35 @@ def user_value():
     # Dependents=
     # Education=
     # Self_Employed=
-    ApplicantIncome = st.sidebar('ApplicantIncome', float(olo.ApplicantIncome.min()), float(olo.ApplicantIncome.min()),float(olo.ApplicantIncome.mean()))
-    CoapplicantIncome= st.sidebar('ApplicantIncome', float(olo.CoapplicantIncome.min()), float(olo.CoapplicantIncome.min()),float(olo.CoapplicantIncome.mean()))
-    # LoanAmount=
-    # Loan_Amount_Term=
+    #ApplicantIncome = st.sidebar('ApplicantIncome', float(olo.ApplicantIncome.min()), float(olo.ApplicantIncome.max()),float(olo.ApplicantIncome.mean()))
+    CoapplicantIncome= st.sidebar('CoapplicantIncome', float(olo.CoapplicantIncome.min()), float(olo.CoapplicantIncome.max()),float(olo.CoapplicantIncome.mean()))
+    #LoanAmount= st.sidebar('LoanAmount', float(olo.LoanAmount.min()), float(olo.LoanAmount.min()),float(olo.LoanAmount.mean()))
+    #Loan_Amount_Term = st.sidebar('Loan_Amount_Term ', float(olo.Loan_Amount_Term .min()), float(olo.Loan_Amount_Term .min()),float(olo.Loan_Amount_Term .mean()))
     # Credit_History=
     # Property_Area=
     # Loan_Status=
     data= {
-    'Loan_ID' : 0,
-    'Gender' : 0,
-    'Married' : 0,
-    'Dependents' : 0,
-    'Education' : 0,
-    'Self_Employed' : 0,
-    'ApplicantIncome' :0,
-    'CoapplicantIncome' :0,
-    'LoanAmount':0,
-    'Loan_Amount_Term' : 0,
-    'Credit_History' : 0,
-    'Property_Area' :0,
-    'Loan_Status' :0
-
+    #'Loan_ID' : 0,
+    #'Gender' : 0,
+    #'Married' : 0,
+    #'Dependents' : 0,
+    #'Education' : 0,
+    #'Self_Employed' : 0,
+    #'ApplicantIncome' : ApplicantIncome,
+    'CoapplicantIncome' :CoapplicantIncome,
+    #'LoanAmount': LoanAmount,
+    #'Loan_Amount_Term' : LoanAmount,
+    #'Credit_History' : 0,
+    #'Property_Area' :0,
+    #'Loan_Status' :0
     }
+    features = pd.DataFrame(data, index=[0])
+    return features
+
+
+input_df = user_value()
+st.write('Input values')
+st.table(input_df)
+st.write('---')
 
 
