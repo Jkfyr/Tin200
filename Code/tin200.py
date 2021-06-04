@@ -3,7 +3,8 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import pandas as pd
 import streamlit.components.v1 as components
-
+from pandas_profiling import ProfileReport
+from streamlit_pandas_profiling import st_profile_report
 # title
 st.title("OGA BOGA LAND")
 st.sidebar.title('Enter your data here:')
@@ -70,4 +71,8 @@ st.write('Input values')
 st.table(input_df)
 st.write('---')
 
+
+#st.subheader('Tuned DataFrame')
+#profile = ProfileReport(olo)
+#st_profile_report(profile)
 
