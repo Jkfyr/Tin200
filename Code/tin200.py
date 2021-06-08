@@ -1,11 +1,12 @@
 import streamlit as st
 import pandas as pd
 import matplotlib.pyplot as plt
-import pandas as pd
 import streamlit.components.v1 as components
 from pandas_profiling import ProfileReport
 from streamlit_pandas_profiling import st_profile_report
-# title
+from sklearn.ensemble import RandomForestClassifier
+from sklearn.preprocessing import LabelEncoder
+
 st.title("OGA BOGA LAND")
 st.sidebar.title('Enter your data here:')
 
@@ -25,20 +26,20 @@ st.write("[FIRE!!!]()")
 st.write('---')
 st.write('jk is testing this web')
 components.html("<p style='color:red;'> :O COLOR")
-#df_train = pd.read_csv('../DATA/train_TIN200.csv')
-#C:\Users\jkfyr\OneDrive\Documents\NMBU\Tin200\Tin200\DATA
+#df_train = pd.read_csv('../DATA/prepared_train.csv')
+#print((df_train))
+#url = 'C:/Users/jkfyr/OneDrive/Documents/NMBU/Tin200/Tin200/DATA/prepared_train.csv'
 olo = pd.read_csv('C:/Users/jkfyr/OneDrive/Documents/NMBU/Tin200/Tin200/DATA/prepared_train.csv')
-url = 'C:/Users/jkfyr/OneDrive/Documents/NMBU/Tin200/Tin200/DATA/train_TIN200.csv'
 st.write(olo)
 st.write('---')
 
 
 def user_value():
-    Loan_ID = st.sidebar.s
-    Gender_Imputed = st.sidebar.selectbox('Gender', ['Male','Fmale'])
+    #Loan_ID = st.sidebar.s
+    Gender_Imputed = st.sidebar.selectbox('Gender', ['Male', 'Fmale'])
     Married_Imputed = st.sidebar.selectbox('Married', ['Yes', 'No'])
     Dependents_Imputed = st.sidebar.slider('Dependents', 0, 1, 3)
-    Education_Imputed = st.sidebar.selectbox('Education', ['Yes', 'NO'])
+    Education_Imputed = st.sidebar.selectbox('Education', ['Yes', 'No'])
     #Self_Employed_Imputed = st.sidebar.slider('Self_Employed', 0, 1)
     ApplicantIncome = st.sidebar.slider('ApplicantIncome', float(olo.ApplicantIncome.min()), float(olo.ApplicantIncome.max()), float(olo.ApplicantIncome.mean()))
     CoapplicantIncome= st.sidebar.slider('CoapplicantIncome', float(olo.CoapplicantIncome.min()), float(olo.CoapplicantIncome.max()), float(olo.CoapplicantIncome.mean()))
@@ -63,16 +64,41 @@ def user_value():
             #'Loan_Status' :Loan_Status
     }
     features = pd.DataFrame(data, index=[0])
-    return features
 
+    return features
 
 input_df = user_value()
 st.write('Input values')
-st.table(input_df)
-st.write('---')
+st.write(input_df)
 
+lb = LabelEncoder()
+string_val = ['Gender', 'Married', 'Education']
+for col in string_val:
+    input_df[col] = lb.fit_transform(input_df[col])
+
+
+st.write('---')
 
 #st.subheader('Tuned DataFrame')
 #profile = ProfileReport(olo)
 #st_profile_report(profile)
 
+#region placeholder_regresser
+#X = olo.drop('Loan_Status')
+X = olo.drop(['Unnamed: 0', 'Loan_Status', 'Loan_ID', 'Self_Employed_Imputed'], axis=1)
+
+Y = olo['Loan_Status']
+lb = LabelEncoder()
+Y = lb.fit_transform(Y)
+
+mod = RandomForestClassifier()
+mod.fit(X, Y)
+pred = mod.predict(input_df)
+if pred[0] == 0:
+    pred = 'Not approved'
+else:
+    pred = 'Approved'
+
+st.write('Your loan is: {}'.format(pred))
+st.write('done')
+# endregion
