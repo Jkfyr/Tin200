@@ -9,6 +9,8 @@ from sklearn.preprocessing import LabelEncoder
 from xgboost import XGBClassifier
 from eli5.xgboost import explain_weights_xgboost
 from eli5 import format_as_dataframe
+from eli5 import explain_weights
+
 st.title("OGA BOGA LAND")
 st.sidebar.title('Enter your data here:')
 
@@ -93,12 +95,12 @@ Y = olo['Loan_Status']
 lb = LabelEncoder()
 Y = lb.fit_transform(Y)
 
-#forest = RandomForestClassifier()
-#forest.fit(X, Y)
-#pred =forest.predict(input_df)
-xgb = XGBClassifier()
-xgb.fit(X, Y)
-pred = xgb.predict(input_df)
+forest = RandomForestClassifier()
+forest.fit(X, Y)
+pred =forest.predict(input_df)
+#xgb = XGBClassifier()
+#xgb.fit(X, Y)
+#pred = xgb.predict(input_df)
 
 if pred[0] == 0:
     pred = 'Not approved'
@@ -107,9 +109,10 @@ else:
 
 st.header('Your loan is: {}'.format(pred))
 
-params = explain_weights_xgboost(xgb, top=3)
+#params = explain_weights_xgboost(xgb, top=3)
+params = explain_weights(forest, top=3)
 params = format_as_dataframe(params)
-
+st.write('forest')
 st.write('your params:')
 st.write(params)
 st.write('---')
