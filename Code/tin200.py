@@ -38,7 +38,7 @@ st.write('---')
 #url = 'C:/Users/jkfyr/OneDrive/Documents/NMBU/Tin200/Tin200/DATA/prepared_train.csv'
 df = pd.read_csv(r'C:/Users/jkfyr/OneDrive/Documents/NMBU/Tin200/Tin200/final_draft.csv')
 
-st.write(df)
+#st.write(df)
 
 
 def user_value():
@@ -75,27 +75,49 @@ def user_value():
     return features
 
 input_df = user_value()
-st.write('raw values')
-st.write(input_df)
+#st.write('raw values')
+#st.write(input_df)
 st.write('---')
-#display_df = input_df.transpose()
-#display_df = display_df.rename(columns={0: 'input value'})
-#st.write(display_df)
+display_df = input_df.transpose()
+display_df = display_df.rename(columns={0: 'input value'})
+st.write(display_df)
 
 
-lb = LabelEncoder()
 string_val = ['Gender', 'Married', 'Education', 'Self_Employed']
 for col in string_val:
-    #if input_df.iloc[0][col] == 'Male' or :
+    #st.write(col)
+    #print('==========')
+    #print(input_df.loc[0,[col]])
+    #input_df.loc[0,[col]] = 'ape'
+
+    #print('========')
+    #print(input_df.iloc[0][col])
+    #st.write('ape')
+   #st.write(input_df)
+
+    #input_df.iloc[0][col] = 'ape'
+
+    #st.write('first: {}'.format(input_df.iloc[0][col]))
+    if input_df.iloc[0][col] == 'Male':
     #input_df[col] = lb.fit_transform(input_df[col])
-        input_df.at[0,col] = 0
+
+        input_df.loc[0,[col]]  = 0
+
+    elif input_df.iloc[0][col] == 'No':
+        input_df.loc[0, [col]] = 0
     else:
-        input_df.at[0, col] = 1
-    st.write(input_df.iloc[0][col])
+        input_df.loc[0,[col]] = 1
+
+
+
+        #input_df.replace('Female', 1,inplace=True)
+        #st.write(col)
+        #st.write(input_df.iloc[0][col])
+    #st.write('change: {}'.format(input_df.iloc[0][col]))
 
 st.write('---')
-st.write('controll changes')
-st.write(input_df)
+#st.write('controll changes')
+#st.write(input_df)
 
 st.write('---')
 #st.subheader('Tuned DataFrame')
@@ -112,18 +134,16 @@ X = df.drop('Loan_Status', axis=1)
 
 #print(Y.columns)
 y = df['Loan_Status']
-st.write(y)
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.33, random_state=42)
 
 
 forest = RandomForestClassifier()
 forest.fit(X_train, y_train)
 forest_pred = forest.predict(X_test)
-st.write('check')
-st.write(forest.predict(input_df))
+
 forest.fit(X, y)
 pred = forest.predict(input_df)
-st.write(pred)
+#st.write(pred)
 
 #xgb = XGBClassifier()
 #xgb.fit(X, y)

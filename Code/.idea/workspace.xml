@@ -4,6 +4,7 @@
     <list default="true" id="adc68736-0290-419c-972a-69483ee3f06f" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/tin200.py" beforeDir="false" afterPath="$PROJECT_DIR$/tin200.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Debug.ipynb" beforeDir="false" afterPath="$PROJECT_DIR$/../Debug.ipynb" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../TIN200_ML.ipynb" beforeDir="false" afterPath="$PROJECT_DIR$/../TIN200_ML.ipynb" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -91,7 +92,7 @@
       <workItem from="1622639301249" duration="18768000" />
       <workItem from="1622753527041" duration="15708000" />
       <workItem from="1623149699423" duration="22489000" />
-      <workItem from="1623688175827" duration="10171000" />
+      <workItem from="1623688175827" duration="19676000" />
     </task>
     <servers />
   </component>
@@ -112,6 +113,6 @@
     </option>
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
-    <SUITE FILE_PATH="coverage/Code$tin200.coverage" NAME="tin200 Coverage Results" MODIFIED="1623750012414" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/Code$tin200.coverage" NAME="tin200 Coverage Results" MODIFIED="1623761206882" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
   </component>
 </project>
