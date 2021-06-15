@@ -10,6 +10,8 @@ from xgboost import XGBClassifier
 from eli5.xgboost import explain_weights_xgboost
 from eli5 import format_as_dataframe
 from eli5 import explain_weights
+from sklearn.model_selection import train_test_split
+
 
 st.title("Automatic mortgage processing")
 st.sidebar.title('Enter your data here:')
@@ -34,22 +36,22 @@ st.write('---')
 #print((df_train))
 
 #url = 'C:/Users/jkfyr/OneDrive/Documents/NMBU/Tin200/Tin200/DATA/prepared_train.csv'
-olo = pd.read_csv('C:/Users/jkfyr/OneDrive/Documents/NMBU/Tin200/Tin200/full_fix_data.csv')
+df = pd.read_csv(r'C:/Users/jkfyr/OneDrive/Documents/NMBU/Tin200/Tin200/final_draft.csv')
 
-#st.write(olo)
+st.write(df)
 
 
 def user_value():
     #Loan_ID = st.sidebar.s
-    Gender_Imputed = st.sidebar.selectbox('Gender', ['Male', 'Fmale'])
-    Married_Imputed = st.sidebar.selectbox('Married', ['Yes', 'No'])
+    Gender_Imputed = st.sidebar.selectbox('Gender', ['Male', 'Female'])
+    Married_Imputed = st.sidebar.selectbox('Married', [ 'No', 'Yes'])
     Dependents_Imputed = st.sidebar.slider('Dependents', 0, 1, 3)
-    Education_Imputed = st.sidebar.selectbox('Education', ['Yes', 'No'])
-    Self_Employed_Imputed = st.sidebar.selectbox('Self_Employed', ['Yes', 'No'])
-    ApplicantIncome = st.sidebar.slider('ApplicantIncome', float(olo.ApplicantIncome.min()), float(olo.ApplicantIncome.max()), float(olo.ApplicantIncome.mean()))
-    CoapplicantIncome= st.sidebar.slider('CoapplicantIncome', float(olo.CoapplicantIncome.min()), float(olo.CoapplicantIncome.max()), float(olo.CoapplicantIncome.mean()))
-    LoanAmount= st.sidebar.slider('LoanAmount', float(olo.LoanAmount.min()), float(olo.LoanAmount.max()), float(olo.LoanAmount.mean()))
-    Loan_Amount_Term = st.sidebar.slider('Loan_Amount_Term ', float(olo.Loan_Amount_Term .min()), float(olo.Loan_Amount_Term .max()), float(olo.Loan_Amount_Term .mean()))
+    Education_Imputed = st.sidebar.selectbox('Education', ['No', 'Yes'])
+    Self_Employed_Imputed = st.sidebar.selectbox('Self_Employed', ['No', 'Yes'])
+    ApplicantIncome = st.sidebar.slider('ApplicantIncome', float(df.ApplicantIncome.min()), float(df.ApplicantIncome.max()), float(df.ApplicantIncome.mean()))
+    CoapplicantIncome= st.sidebar.slider('CoapplicantIncome', float(df.CoapplicantIncome.min()), float(df.CoapplicantIncome.max()), float(df.CoapplicantIncome.mean()))
+    LoanAmount= st.sidebar.slider('LoanAmount', float(df.LoanAmount.min()), float(df.LoanAmount.max()), float(df.LoanAmount.mean()))
+    Loan_Amount_Term = st.sidebar.slider('Loan_Amount_Term ', float(df.Loan_Amount_Term .min()), float(df.Loan_Amount_Term .max()), float(df.Loan_Amount_Term .mean()))
     Credit_History = st.sidebar.slider('Credit_History', 0, 1)
     Property_Area_Imputed = st.sidebar.slider('Property_Area', 0, 1, 2)
     #Loan_Status = st.sidebar('Loan_Status', float(olo.Loan_Status.min()), float(olo.Loan_Status.max()), float(olo.Loan_Status.mean()))
@@ -73,17 +75,27 @@ def user_value():
     return features
 
 input_df = user_value()
+st.write('raw values')
+st.write(input_df)
 st.write('---')
-display_df = input_df.transpose()
-display_df = display_df.rename(columns={0:'input value'})
-st.write(display_df)
+#display_df = input_df.transpose()
+#display_df = display_df.rename(columns={0: 'input value'})
+#st.write(display_df)
 
 
 lb = LabelEncoder()
-string_val = ['Gender', 'Married', 'Education','Self_Employed']
+string_val = ['Gender', 'Married', 'Education', 'Self_Employed']
 for col in string_val:
-    input_df[col] = lb.fit_transform(input_df[col])
+    #if input_df.iloc[0][col] == 'Male' or :
+    #input_df[col] = lb.fit_transform(input_df[col])
+        input_df.at[0,col] = 0
+    else:
+        input_df.at[0, col] = 1
+    st.write(input_df.iloc[0][col])
 
+st.write('---')
+st.write('controll changes')
+st.write(input_df)
 
 st.write('---')
 #st.subheader('Tuned DataFrame')
@@ -95,33 +107,41 @@ st.write('---')
 
 
 
-X = olo
-Y = pd.read_csv('C:/Users/jkfyr/OneDrive/Documents/NMBU/Tin200/Tin200/y.csv')
+
+X = df.drop('Loan_Status', axis=1)
 
 #print(Y.columns)
-Y = Y['Loan_Status']
+y = df['Loan_Status']
+st.write(y)
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.33, random_state=42)
+
 
 forest = RandomForestClassifier()
-forest.fit(X, Y)
-pred =forest.predict(input_df)
+forest.fit(X_train, y_train)
+forest_pred = forest.predict(X_test)
+st.write('check')
+st.write(forest.predict(input_df))
+forest.fit(X, y)
+pred = forest.predict(input_df)
+st.write(pred)
 
-xgb = XGBClassifier()
-xgb.fit(X, Y)
-pred_xg = xgb.predict(input_df)
+#xgb = XGBClassifier()
+#xgb.fit(X, y)
+#pred_xg = xgb.predict(input_df)
 
 if pred[0] == 0:
-    pred = 'Not approved'
+    disp_pred = 'Not approved'
 
 else:
-    pred = 'Approved'
+    disp_pred = 'Approved'
 
-st.header('Your loan is: {}'.format(pred))
+st.header('Your loan is: {}'.format(disp_pred))
 
-if pred == 'Not approved':
-    params = explain_weights_xgboost(xgb, top=3)
-    #params = explain_weights(forest, top=3)
+if disp_pred == 'Not approved':
+    #params = explain_weights_xgboost(xgb, top=3)
+    params = explain_weights(forest, top=3)
     params = format_as_dataframe(params)
-    st.write('here are features you can improve:')
+    st.write('here are features you can improve for the future:')
     st.write(params)
     st.write('---')
 # endregion
