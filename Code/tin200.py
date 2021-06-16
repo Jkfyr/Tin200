@@ -12,9 +12,10 @@ from eli5 import format_as_dataframe
 from eli5 import explain_weights
 from sklearn.model_selection import train_test_split
 
+seed = 1337
 
-st.title("Automatic mortgage processing")
-st.sidebar.title('Enter your data here:')
+st.title("Loan checker")
+st.sidebar.title('Enter your information here:')
 
 
 #region IMAGE
@@ -30,15 +31,19 @@ st.sidebar.title('Enter your data here:')
 # TODO: fix URLS stremlit will not run short rout
 # ===============================
 st.write('---')
-#st.write('jk is testing this web')
+"""
+Hi, potential customer! \n
+If you want a loan you can try out this program to
+check whether your loan will be approved or not. Just plug in your data on the left hand side
+and let us do the rest. Remember, we will only return estimates and you 
+will have to consult our bank to actually get a loan. 
+If our program decides you won't get a loan you can check
+at the bottom to see what you may want to improve or change in order to get a loan
+"""
 #components.html("<p style='color:red;'> :O COLOR")
-#df_train = pd.read_csv('../DATA/prepared_train.csv')
-#print((df_train))
 
 #url = 'C:/Users/jkfyr/OneDrive/Documents/NMBU/Tin200/Tin200/DATA/prepared_train.csv'
 df = pd.read_csv(r'C:/Users/jkfyr/OneDrive/Documents/NMBU/Tin200/Tin200/final_draft.csv')
-
-#st.write(df)
 
 
 def user_value():
@@ -75,51 +80,28 @@ def user_value():
     return features
 
 input_df = user_value()
-#st.write('raw values')
-#st.write(input_df)
 st.write('---')
 display_df = input_df.transpose()
-display_df = display_df.rename(columns={0: 'input value'})
+display_df = display_df.rename(columns={0: 'Your info'})
+st.subheader('Your information:')
+
 st.write(display_df)
 
 
 string_val = ['Gender', 'Married', 'Education', 'Self_Employed']
 for col in string_val:
-    #st.write(col)
-    #print('==========')
-    #print(input_df.loc[0,[col]])
-    #input_df.loc[0,[col]] = 'ape'
 
-    #print('========')
-    #print(input_df.iloc[0][col])
-    #st.write('ape')
-   #st.write(input_df)
-
-    #input_df.iloc[0][col] = 'ape'
-
-    #st.write('first: {}'.format(input_df.iloc[0][col]))
     if input_df.iloc[0][col] == 'Male':
-    #input_df[col] = lb.fit_transform(input_df[col])
-
-        input_df.loc[0,[col]]  = 0
+        input_df.loc[0, [col]] = 0
 
     elif input_df.iloc[0][col] == 'No':
         input_df.loc[0, [col]] = 0
     else:
-        input_df.loc[0,[col]] = 1
+        input_df.loc[0, [col]] = 1
 
-
-
-        #input_df.replace('Female', 1,inplace=True)
-        #st.write(col)
-        #st.write(input_df.iloc[0][col])
-    #st.write('change: {}'.format(input_df.iloc[0][col]))
 
 st.write('---')
-#st.write('controll changes')
-#st.write(input_df)
 
-st.write('---')
 #st.subheader('Tuned DataFrame')
 #profile = ProfileReport(olo)
 #st_profile_report(profile)
@@ -134,12 +116,11 @@ X = df.drop('Loan_Status', axis=1)
 
 #print(Y.columns)
 y = df['Loan_Status']
-X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.33, random_state=42)
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.33, random_state=seed)
 
 
 forest = RandomForestClassifier()
 forest.fit(X_train, y_train)
-forest_pred = forest.predict(X_test)
 
 forest.fit(X, y)
 pred = forest.predict(input_df)
@@ -157,11 +138,33 @@ else:
 
 st.header('Your loan is: {}'.format(disp_pred))
 
+
+import eli5
+from eli5.sklearn import PermutationImportance
+
 if disp_pred == 'Not approved':
-    #params = explain_weights_xgboost(xgb, top=3)
-    params = explain_weights(forest, top=3)
-    params = format_as_dataframe(params)
-    st.write('here are features you can improve for the future:')
-    st.write(params)
-    st.write('---')
+    droplist = ['Gender_Imputed', 'Married_Imputed', 'Property_Area_Imputed', 'Dependents_Imputed',
+                'Self_Employed_Imputed']
+
+    """
+    Here is your information that affected our decision the most.
+    You may want to look into these to see if you can 
+    make any changes in order to increase your chances of getting a loan.
+    Good luck!
+
+    """
+
+    perm = PermutationImportance(forest).fit(X, y)
+    weights_forest = eli5.show_weights(perm, feature_names=list(X.columns))
+    weights_forest = pd.read_html(weights_forest.data)[0]
+    improvements = weights_forest[~weights_forest['Feature'].isin(droplist)]
+    improvements = improvements.reset_index(drop=True)
+
+    st.write(improvements['Feature'])
+else:
+    """
+    Congratulations! We think you may be able to get a loan! Reach out to us
+    so we can double check the application and set it all up.
+    Looking forward to seeing you soon!
+    """
 # endregion
